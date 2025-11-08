@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const comments_url = "http://localhost:3000/comment";
+const comments_url = "https://690f429145e65ab24ac30d1f.mockapi.io/coment";
 
 const initialState = {
     commentList: [],

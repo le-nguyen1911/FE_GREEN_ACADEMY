@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 
-const url = "http://localhost:3000/products";
+const url = "https://690f3fc545e65ab24ac302dd.mockapi.io/product";
 
 // Lấy dữ liệu
 export const getdata = createAsyncThunk("Product/getdata", async () => {

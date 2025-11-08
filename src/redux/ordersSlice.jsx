@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const orders_url = "http://localhost:3000/orders";
+const orders_url = "https://68d7ccd92144ea3f6da673fb.mockapi.io/orders";
 
 const initialState = {
     orderlist: [],

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_USER = "http://localhost:3000/users";
+const URL_USER = "https://68d7ccd92144ea3f6da673fb.mockapi.io/Users";
 
 const initialState = {
     userlist: [],
