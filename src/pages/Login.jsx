@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import {loginUser} from "../redux/authSlice.jsx";
 
-const URL_USER = "http://localhost:3000/users";
+const URL_USER = "https://68d7ccd92144ea3f6da673fb.mockapi.io/Users";
 
 const Login = () => {
     const [isSignup, setIsSignup] = useState(false);
@@ -30,7 +30,7 @@ const Login = () => {
             // Gọi API lấy thông tin người dùng
             const res = await axios.get(`${URL_USER}?nameAccount=${nameAccount}&password=${password}`);
             const user = res.data[0];
-
+            console.log(user);
             if (!user) {
                 alert("Sai tài khoản hoặc mật khẩu!");
                 return;
