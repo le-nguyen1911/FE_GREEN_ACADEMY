@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+@import "tailwindcss";
+* {
+   font-family: Outfit, sans-serif;   
+}
+body {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Font cho từng class */
+.prata-regular {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-mono {
+  font-family: "Roboto Mono", monospace;
+}
+
+.outfit {
+  font-family: "Outfit", sans-serif;
+}
+
+a.active hr {
+  display: block;
+  transition: 1s;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+.form-checkout {
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+@media (max-width:992px) {
+  a.active{
+    background-color: black;
+    color: white;
+  }
+}

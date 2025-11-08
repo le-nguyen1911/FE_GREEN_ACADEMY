@@ -1,0 +1,251 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+
+.auth-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    background: #fff;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.auth-left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+}
+
+.auth-box {
+    width: 360px;
+    padding: 10px;
+    animation: fadeIn 0.4s ease;
+}
+
+.auth-title {
+    font-size: 32px;
+    color: #222;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.auth-sub {
+    color: #777;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* ==== FORM ==== */
+.auth-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 15px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+}
+
+.auth-input:focus {
+    border-color: #8c52ff;
+    outline: none;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #8c52ff;
+    color: #fff;
+    font-weight: 600;
+    margin-top: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    background: #6a34d8;
+}
+
+/* ==== TEXT / LINK ==== */
+.auth-text {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.auth-link {
+    color: #8c52ff;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+/* ==== BÊN PHẢI ==== */
+.auth-right {
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, #7a3cff, #b085ff);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.auth-welcome {
+    max-width: 400px;
+}
+
+.auth-welcome h2 {
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.auth-welcome p {
+    margin-top: 10px;
+    line-height: 1.6;
+    color: #f0f0f0;
+}
+
+.auth-image {
+    width: 150px;
+    margin: 20px auto;
+
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+}
+
+.auth-welcome h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.auth-small {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* ==== NÚT ĐÓNG ==== */
+.auth-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.auth-close-btn:hover {
+    color: #ffb3b3;
+    transform: scale(1.2);
+}
+
+/* ==== ANIMATION ==== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==== RESPONSIVE ==== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .auth-left,
+    .auth-right {
+        width: 100%;
+        height: 50%;
+    }
+
+    .auth-box {
+        width: 320px;
+    }
+
+    .auth-title {
+        font-size: 28px;
+    }
+
+    .auth-welcome h2 {
+        font-size: 28px;
+    }
+
+    .auth-image {
+        width: 120px;
+    }
+
+    .auth-close-btn {
+        color: #333;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column-reverse;
+    }
+
+    .auth-right {
+        display: none; /* Ẩn phần chào mừng để tối ưu mobile */
+    }
+
+    .auth-left {
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        padding: 20px;
+    }
+
+    .auth-box {
+        width: 100%;
+        max-width: 340px;
+    }
+
+    .auth-title {
+        font-size: 26px;
+    }
+
+    .auth-btn {
+        font-size: 15px;
+    }
+
+    .auth-close-btn {
+        color: #8c52ff;
+        top: 15px;
+        right: 15px;
+    }
+}
