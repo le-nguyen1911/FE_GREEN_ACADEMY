@@ -4,6 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-    base: "/FE_GREEN_ACADEMY/",
+    // base: "/FE_GREEN_ACADEMY/",
   plugins: [react(), tailwindcss()],
 });

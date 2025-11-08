@@ -14,7 +14,6 @@ const Profile = () => {
     const [displayName, setDisplayName] = useState(currentUser?.displayName || "");
     const [message, setMessage] = useState("");
 
-    // Xử lý chọn ảnh đại diện mới
     const handleImage = (e) => {
         const file = e.target.files[0];
         if (!file) return;

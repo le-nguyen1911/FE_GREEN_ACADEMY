@@ -23,7 +23,10 @@ const AdminPage = () => {
         return localStorage.getItem("adminDisplay") || "dashboard";
     });
 
-    const totalquantity = orderlist.reduce((acc, item) => acc + item.items.quantity, 0);
+    const totalquantity = orderlist.reduce((acc, order) => {
+        const itemQuantity = order.items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        return acc + itemQuantity;
+      }, 0);
     const orderquantity = orderlist.length
     const revenue = orderlist.reduce((acc, item) => acc + item.total, 0);
     const  newcustm = userlist.length
@@ -195,31 +198,31 @@ const AdminPage = () => {
                                     <span className="ml-4">HOME</span>
                                 </button>
                             </li>
-                            <li className="relative px-2 py-1">
+                            <li className={`relative px-2 py-1 ${display === "dashboard" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
                                 <button onClick={() => setDisplay("dashboard")}
                                         className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
                                     <span className="ml-4">DASHBOARD</span>
                                 </button>
                             </li>
-                            <li className="relative px-2 py-1">
+                            <li className={`relative px-2 py-1 ${display === "products" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
                                 <button onClick={() => setDisplay("products")}
                                         className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
                                     <span className="ml-4">PRODUCTS</span>
                                 </button>
                             </li>
-                            <li className="relative px-2 py-1">
+                            <li className={`relative px-2 py-1 ${display === "users" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
                                 <button onClick={() => setDisplay("users")}
                                         className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
                                     <span className="ml-4">USERS</span>
                                 </button>
                             </li>
-                            <li className="relative px-2 py-1">
+                            <li className={`relative px-2 py-1 ${display === "order" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
                                 <button onClick={() => setDisplay("order")}
                                         className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
                                     <span className="ml-4">ORDERS</span>
                                 </button>
                             </li>
-                            <li className="relative px-2 py-1 ">
+                            <li className={`relative px-2 py-1 ${display === "comments" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
                                 <button onClick={() => setDisplay("comments")}
                                         className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
                                     <span className="ml-4">COMMENTS</span>
@@ -258,7 +261,7 @@ const AdminPage = () => {
                                                         {color: "blue-400", value: orderquantity, label: "Tổng số đơn hàng"},
                                                         {color: "yellow-400", value: totalquantity, label: "Sản phẩm đã bán"},
                                                         {color: "pink-600", value: (newcustm -1), label: "Khách hàng mới"},
-                                                        {color: "green-400", value: revenue.toLocaleString(), label: "Doanh thu tháng này"},
+                                                        {color: "green-400", value: revenue.toLocaleString() + " VNĐ", label: "Doanh thu tháng này"},
                                                     ].map((item, index) => (
                                                         <a
                                                             key={index}
