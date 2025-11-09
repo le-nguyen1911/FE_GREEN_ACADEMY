@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import "../css/Login.css";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import techzone from "../assets/TECHZONE.png";
 import axios from "axios";
 import {loginUser} from "../redux/authSlice.jsx";
 
@@ -208,7 +209,7 @@ const Login = () => {
                         Cập nhật mỗi ngày, giao diện hiện đại, dễ sử dụng.<br/>
                         Đăng nhập ngay để trải nghiệm toàn bộ tính năng tuyệt vời!
                     </p>
-                    <img src="/image/TECHZONE .png" alt="illustration" className="auth-image"/>
+                    <img src={techzone} alt="illustration" className="auth-image"/>
                     <h3>Biến ý tưởng thành hiện thực</h3>
                     <p className="auth-small">Trải nghiệm mượt mà trên mọi thiết bị</p>
                 </div>
