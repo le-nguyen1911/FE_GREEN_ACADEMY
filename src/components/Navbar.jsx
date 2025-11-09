@@ -218,19 +218,22 @@ const Navbar = () => {
 
                 {/* Thanh tìm kiếm */}
                 {showSearch && (
-                    <div className="flex justify-center px-[5vw] md:px-[7vw] lg:px-[9vw] bg-gray-100 py-3 transition-all duration-300">
-                        <input
-                            type="text"
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            onKeyDown={handleSearchKeyDown}
-                            placeholder="Nhập từ khóa tìm kiếm..."
-                            className="w-[95%] sm:w-[70%] md:w-[60%] p-2 border border-gray-300 rounded text-black focus:outline-none"
-                        />
-                        <FaXmark
-                            onClick={() => dispatch(toggleSearch())}
-                            className="text-3xl ml-3 flex m-auto cursor-pointer hover:text-[#8c52ff] transition-colors"
-                        />
+                    <div className="flex justify-center items-center bg-gray-100 py-3 transition-all duration-300 w-full">
+                        <div className="flex items-center w-full max-w-2xl bg-white rounded-lg shadow-sm border border-gray-300 px-3">
+                            <input
+                                type="text"
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
+                                onKeyDown={handleSearchKeyDown}
+                                placeholder=" Nhập từ khóa tìm kiếm..."
+                                className="flex-1 p-2 text-black bg-transparent focus:outline-none"
+                            />
+                            <FaXmark
+                                onClick={() => dispatch(toggleSearch())}
+                                className="text-2xl ml-2 text-gray-500 cursor-pointer hover:text-[#8c52ff] transition-colors"
+                                title="Đóng tìm kiếm"
+                            />
+                        </div>
                     </div>
                 )}
             </div>
