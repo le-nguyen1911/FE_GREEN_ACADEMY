@@ -101,7 +101,7 @@ const AdminPage = () => {
     return (
 
         <div className="fixed inset-0 flex flex-col justify-center items-center z-50 w-full">
-            <div className="flex w-full md:hidden p-3  justify-between items-center text-white relative bg-white mt-20">
+            <div className="flex w-full md:hidden p-3   justify-between items-center text-white relative bg-white ">
                 <div className="flex items-center gap-3">
                     <img
                         src={currentUser.avatar}

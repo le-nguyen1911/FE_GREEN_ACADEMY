@@ -29,7 +29,7 @@ const Featuredcategories = () => {
               Chìm đắm trong thế giới công nghệ
             </p>
             <button
-              onClick={() => navigate("/product")}
+              onClick={() => navigate("productPage")}
               className="mt-4 px-6 py-3 bg-[#8c52ff] text-white rounded-3xl font-semibold
                          transition hover:bg-[#6b39cd]"
             >
@@ -58,7 +58,7 @@ const Featuredcategories = () => {
               Thiết kế gaming chuẩn Esport, hiệu năng vượt trội
             </p>
             <button
-              onClick={() => navigate("/product")}
+              onClick={() => navigate("productPage")}
               className="mt-4 px-6 py-3 bg-[#8c52ff] text-white rounded-3xl font-semibold
                          transition hover:bg-[#6b39cd]"
             >

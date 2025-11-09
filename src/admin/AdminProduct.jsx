@@ -41,7 +41,7 @@ const AdminProduct = () => {
                 </div>
             </header>
 
-            <main>
+            <main className="p-4 md:p-8">
                 <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-100 border-4 border-[#8c52ff]">
                     <div className="flex items-center h-10 mb-4">
                         <h2 className="mr-5 text-lg font-medium">Quản lý sản phẩm</h2>

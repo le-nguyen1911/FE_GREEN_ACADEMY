@@ -42,13 +42,14 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
     return null;
 });
 
-//  Cập nhật thông tin người dùng
+
+// Cập nhật thông tin người dùng
 export const updateProfile = createAsyncThunk(
     "auth/updateProfile",
     async ({ userId, updatedData }, { rejectWithValue }) => {
         try {
-            const res = await axios.patch(`${URL_USER}/${userId}`, updatedData);
-            localStorage.setItem("currentUser", JSON.stringify(res.data)); // lưu lại vào localStorage
+            const res = await axios.put(`${URL_USER}/${userId}`, updatedData);
+            localStorage.setItem("currentUser", JSON.stringify(res.data));
             return res.data;
         } catch (error) {
             console.error("Lỗi cập nhật hồ sơ:", error);
@@ -56,6 +57,7 @@ export const updateProfile = createAsyncThunk(
         }
     }
 );
+
 
 // Slice
 const authSlice = createSlice({

@@ -161,7 +161,7 @@ const Payment = () => {
                             key={index}
                             className="flex items-center justify-between mb-3 border border-gray-300 p-3"
                         >
-                            <img src={item.image} className="size-28" alt={item.name} />
+                            <img src={Array.isArray(item.image) ? item.image[0] : item.image} className="size-28" alt={item.name} />
                             <div className="text-lg font-bold">
                                 <p className="mx-2">{item.name}</p>
                                 <p className="mx-2 text-black">
