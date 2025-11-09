@@ -1,107 +1,105 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import ApexCharts from "apexcharts";
-import box from "../assets/box.png";
 import AdminProduct from "./AdminProduct.jsx";
 import AdminUsers from "./AdminUsers.jsx";
 import AdminComments from "./AdminComments.jsx";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AdminOrder from "./AdminOrder.jsx";
-import toggle from "../assets/menu_icon.png"
-import {useNavigate} from "react-router-dom";
-import {getdata} from "../redux/userSlice.jsx";
-import {getdataOrder} from "../redux/ordersSlice.jsx";
+import toggle from "../assets/menu_icon.png";
+import { useNavigate } from "react-router-dom";
+import { getdata } from "../redux/userSlice.jsx";
+import { getdataOrder } from "../redux/ordersSlice.jsx";
 
 const AdminPage = () => {
-
-    const {currentUser} = useSelector((state) => state.auth);
+    const { currentUser } = useSelector((state) => state.auth);
     const { orderlist } = useSelector((state) => state.orders);
+    const { userlist } = useSelector((state) => state.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userlist } = useSelector((state) => state.user);
-    const [isOpen, setIsOpen] = useState(false);
-    const [display, setDisplay] = useState(() => {
-        return localStorage.getItem("adminDisplay") || "dashboard";
-    });
 
+    const [isOpen, setIsOpen] = useState(false);
+    const [display, setDisplay] = useState(
+        () => localStorage.getItem("adminDisplay") || "dashboard"
+    );
+
+    // ==== Tính toán dữ liệu dashboard ====
     const totalquantity = orderlist.reduce((acc, order) => {
-        const itemQuantity = order.items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        const itemQuantity = order.items?.reduce(
+            (sum, item) => sum + (item.quantity || 0),
+            0
+        );
         return acc + itemQuantity;
-      }, 0);
-    const orderquantity = orderlist.length
-    const revenue = orderlist.reduce((acc, item) => acc + item.total, 0);
-    const  newcustm = userlist.length
+    }, 0);
+    const orderquantity = orderlist.length;
+    const revenue = orderlist.reduce((acc, item) => acc + (item.total || 0), 0);
+    const newcustm = userlist.length;
+
+    // ==== Fetch dữ liệu ====
+    useEffect(() => {
+        dispatch(getdataOrder());
+        dispatch(getdata());
+    }, [dispatch]);
 
     useEffect(() => {
         localStorage.setItem("adminDisplay", display);
-
     }, [display]);
+
+    // ==== Vẽ biểu đồ Dashboard ====
     useEffect(() => {
-        dispatch(getdataOrder());
-    }, [dispatch]);
-    useEffect(() => {
-        dispatch(getdata());
-    }, [dispatch]);
-    useEffect(() => {
-        if (display !== "dashboard") return;
-        if (display !== "dashboard") return;
-        if (display !== "dashboard") return;
         if (display !== "dashboard") return;
 
         const chartLineEl = document.querySelector("#chartline");
-        const lineOptions = {
+        const chartPieEl = document.querySelector("#chartpie");
+
+        const chart1 = new ApexCharts(chartLineEl, {
             series: [
-                {name: "TEAM A", type: "area", data: [44, 55, 31, 47, 31, 43, 26, 41, 31, 47, 33]},
-                {name: "TEAM B", type: "line", data: [55, 69, 45, 61, 43, 54, 37, 52, 44, 61, 43]},
+                { name: "TEAM A", type: "area", data: [44, 55, 31, 47, 31, 43, 26] },
+                { name: "TEAM B", type: "line", data: [55, 69, 45, 61, 43, 54, 37] },
             ],
-            chart: {height: 350, type: "line", zoom: {enabled: false}},
-            stroke: {curve: "smooth"},
-            fill: {type: "solid", opacity: [0.35, 1]},
-            labels: ["Dec 01", "Dec 02", "Dec 03", "Dec 04", "Dec 05", "Dec 06", "Dec 07", "Dec 08", "Dec 09", "Dec 10", "Dec 11"],
-            markers: {size: 0},
-            yaxis: [{title: {text: "Series A"}}, {opposite: true, title: {text: "Series B"}}],
+            chart: { height: 350, type: "line", zoom: { enabled: false } },
+            stroke: { curve: "smooth" },
+            fill: { type: "solid", opacity: [0.35, 1] },
+            labels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+            markers: { size: 0 },
             tooltip: {
                 shared: true,
                 intersect: false,
-                y: {
-                    formatter: (y) => (typeof y !== "undefined" ? y.toFixed(0) + " points" : y),
-                },
+                y: { formatter: (y) => (y ? y.toFixed(0) + " điểm" : y) },
             },
-        };
-        const chart1 = new ApexCharts(chartLineEl, lineOptions);
-        chart1.render();
+        });
 
-        const chartPieEl = document.querySelector("#chartpie");
-        const pieOptions = {
+        const chart2 = new ApexCharts(chartPieEl, {
             series: [44, 55, 67, 83],
-            chart: {height: 350, type: "radialBar"},
+            chart: { height: 350, type: "radialBar" },
             plotOptions: {
                 radialBar: {
                     dataLabels: {
-                        name: {fontSize: "22px"},
-                        value: {fontSize: "16px"},
+                        name: { fontSize: "20px" },
+                        value: { fontSize: "14px" },
                         total: {
                             show: true,
-                            label: "Total",
+                            label: "Tổng",
                             formatter: () => 249,
                         },
                     },
                 },
             },
-            labels: ["Apples", "Oranges", "Bananas", "Berries"],
-        };
-        const chart2 = new ApexCharts(chartPieEl, pieOptions);
-        chart2.render();
+            labels: ["Tai nghe", "Chuột", "Bàn phím", "Khác"],
+        });
 
+        chart1.render();
+        chart2.render();
         return () => {
             chart1.destroy();
             chart2.destroy();
         };
     }, [display]);
-    console.log(orderlist);
-    return (
 
-        <div className="fixed inset-0 flex flex-col justify-center items-center z-50 w-full">
-            <div className="flex w-full md:hidden p-3   justify-between items-center text-white relative bg-white ">
+    // ==== Giao diện chính ====
+    return (
+        <div className="fixed inset-0 z-50 w-full bg-white flex flex-col overflow-y-auto">
+            {/* ===== Header Mobile ===== */}
+            <div className="flex md:hidden p-3 justify-between items-center bg-white shadow sticky top-0 z-50">
                 <div className="flex items-center gap-3">
                     <img
                         src={currentUser.avatar}
@@ -112,227 +110,162 @@ const AdminPage = () => {
                         {currentUser.displayName || "Admin"}
                     </h1>
                 </div>
-
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="p-2 rounded  transition"
+                    className="p-2 rounded transition"
                 >
                     <img src={toggle} alt="toggle" className="w-7 h-7" />
                 </button>
+            </div>
 
-                {isOpen && (
-                    <>
-                        {/* Overlay mờ nền */}
-                        <div
-                            className="fixed inset-0 bg-black/50 z-40"
+            {/* ===== Mobile Menu ===== */}
+            {isOpen && (
+                <>
+                    <div
+                        className="fixed inset-0 bg-black/50 z-40"
+                        onClick={() => setIsOpen(false)}
+                    ></div>
+
+                    <div className="fixed top-[70px] left-0 w-full bg-gray-800 text-white flex flex-col items-center justify-center gap-3 py-5 shadow-lg z-50 md:hidden animate-fadeIn">
+                        {[
+                            { key: "dashboard", label: "Dashboard" },
+                            { key: "products", label: "Products" },
+                            { key: "users", label: "Users" },
+                            { key: "order", label: "Orders" },
+                            { key: "comments", label: "Comments" },
+                        ].map((item) => (
+                            <button
+                                key={item.key}
+                                onClick={() => {
+                                    setDisplay(item.key);
+                                    setIsOpen(false);
+                                }}
+                                className={`w-11/12 py-2 rounded-lg font-medium text-center transition ${
+                                    display === item.key
+                                        ? "bg-[#8c52ff] text-white"
+                                        : "bg-gray-700 text-gray-200 hover:bg-[#8c52ff] hover:text-white"
+                                }`}
+                            >
+                                {item.label}
+                            </button>
+                        ))}
+                        <button
+                            onClick={() => navigate("/")}
+                            className="bg-gray-700 text-gray-200 hover:bg-[#8c52ff] hover:text-white w-[91.6667%] py-2 rounded-lg"
+                        >
+                            Quay về trang chủ
+                        </button>
+                        <button
                             onClick={() => setIsOpen(false)}
-                        ></div>
+                            className="mt-3 text-gray-400 text-sm hover:text-red-400"
+                        >
+                            Đóng menu ✕
+                        </button>
+                    </div>
+                </>
+            )}
 
-                        {/* Menu chính */}
-                        <div className="fixed top-16 left-0 w-full bg-gray-800 text-white flex flex-col items-center justify-center gap-3 py-4 shadow-lg z-50 md:hidden animate-fadeIn">
-                            {[
-                                { key: "dashboard", label: "Dashboard" },
-                                { key: "products", label: "Products" },
-                                { key: "users", label: "Users" },
-                                { key: "order", label: "Orders" },
-                                { key: "comments", label: "Comments" },
-                            ].map((item) => (
+            {/* ===== Layout chính ===== */}
+            <div className="flex flex-1 bg-white w-full">
+                {/* Sidebar Desktop */}
+                <aside className="hidden md:block w-60 bg-white border-r border-gray-200 overflow-y-auto">
+                    <div className="text-black text-center py-6 border-b border-gray-200">
+                        <p className="text-2xl text-[#8c52ff] font-semibold">SA</p>
+                        <p className="text-sm italic text-gray-500">DASHBOARD</p>
+                        <img
+                            className="h-20 w-20 mx-auto mt-4 rounded-full object-cover border-4 border-[#8c52ff]"
+                            src={currentUser.avatar}
+                            alt=""
+                        />
+                        <p className="font-bold text-base text-gray-500 mt-2">
+                            {currentUser.displayName}
+                        </p>
+                    </div>
+
+                    <ul className="mt-6 space-y-2 px-3">
+                        {[
+                            { key: "dashboard", label: "DASHBOARD" },
+                            { key: "products", label: "PRODUCTS" },
+                            { key: "users", label: "USERS" },
+                            { key: "order", label: "ORDERS" },
+                            { key: "comments", label: "COMMENTS" },
+                        ].map((item) => (
+                            <li key={item.key}>
                                 <button
-                                    key={item.key}
-                                    onClick={() => {
-                                        setDisplay(item.key);
-                                        setIsOpen(false);
-                                    }}
-                                    className={`w-11/12 py-2 rounded-lg font-medium text-center transition ${
+                                    onClick={() => setDisplay(item.key)}
+                                    className={`block w-full text-left px-4 py-2 rounded-lg font-medium transition ${
                                         display === item.key
                                             ? "bg-[#8c52ff] text-white"
-                                            : "bg-gray-700 text-gray-200 hover:bg-[#8c52ff] hover:text-white"
+                                            : "text-gray-700 hover:bg-gray-100"
                                     }`}
                                 >
                                     {item.label}
                                 </button>
-                            ))}
+                            </li>
+                        ))}
+
+                        <li>
                             <button
                                 onClick={() => navigate("/")}
-                                className=" bg-gray-700 text-gray-200 hover:bg-[#8c52ff] hover:text-white w-[91.6667%] py-2 rounded-lg">
-                                Quay về trang chủ
-                            </button>
-                            <button
-                                onClick={() => setIsOpen(false)}
-                                className="mt-3 text-gray-400 text-sm hover:text-red-400"
+                                className="w-full text-gray-700 hover:text-[#8c52ff] font-semibold mt-3"
                             >
-                                Đóng menu ✕
+                                HOME
                             </button>
-                        </div>
-                    </>
-                )}
-            </div>
-
-
-            <div className="flex h-screen bg-white w-full">
-                {/* Sidebar */}
-                <aside className="z-20 flex-shrink-0 hidden w-60 pl-2 overflow-y-auto bg-white md:block">
-                    <div className="text-black">
-                        <div className="flex p-2 bg-white">
-                            <div className="flex py-3 px-2 items-center">
-                                <p className="text-2xl text-[#8c52ff] font-semibold">SA</p>
-                                <p className="ml-2 font-semibold italic">DASHBOARD</p>
-                            </div>
-                        </div>
-                        <div className="flex justify-center">
-                            <div>
-                                <img
-                                    className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-[#8c52ff]"
-                                    src={currentUser.avatar}
-                                    alt=""
-                                />
-                                <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">Lê Nguyên</p>
-                            </div>
-                        </div>
-
-                        {/* Menu */}
-                        <ul className="mt-6 leading-10">
-                            <li className="relative px-2 py-1">
-                                <button onClick={() => navigate("/")}
-                                        className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
-                                    <span className="ml-4">HOME</span>
-                                </button>
-                            </li>
-                            <li className={`relative px-2 py-1 ${display === "dashboard" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
-                                <button onClick={() => setDisplay("dashboard")}
-                                        className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
-                                    <span className="ml-4">DASHBOARD</span>
-                                </button>
-                            </li>
-                            <li className={`relative px-2 py-1 ${display === "products" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
-                                <button onClick={() => setDisplay("products")}
-                                        className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
-                                    <span className="ml-4">PRODUCTS</span>
-                                </button>
-                            </li>
-                            <li className={`relative px-2 py-1 ${display === "users" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
-                                <button onClick={() => setDisplay("users")}
-                                        className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
-                                    <span className="ml-4">USERS</span>
-                                </button>
-                            </li>
-                            <li className={`relative px-2 py-1 ${display === "order" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
-                                <button onClick={() => setDisplay("order")}
-                                        className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
-                                    <span className="ml-4">ORDERS</span>
-                                </button>
-                            </li>
-                            <li className={`relative px-2 py-1 ${display === "comments" ? "border border-[#8c52ff] text-white rounded-full " : "text-black hover:text-[#8c52ff]"}`}>
-                                <button onClick={() => setDisplay("comments")}
-                                        className="inline-flex items-center w-full text-sm font-semibold text-black hover:text-[#8c52ff]">
-                                    <span className="ml-4">COMMENTS</span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                        </li>
+                    </ul>
                 </aside>
 
                 {/* Main Content */}
-                {display === "dashboard" && (
-                    <div className="flex flex-col flex-1 w-full overflow-y-auto">
-                        <div className="flex flex-col flex-1 w-full overflow-y-auto">
-                            <header className="z-40 py-4 bg-white">
-                                <div className="flex items-center justify-between h-8 px-6 mx-auto">
-                                    <h1 className="text-black text-lg font-semibold">Dashboard</h1>
-                                </div>
-                            </header>
+                <div className="flex flex-1 flex-col overflow-y-auto">
+                    {display === "dashboard" && (
+                        <main className="p-6">
+                            <h1 className="text-xl font-bold text-[#8c52ff] mb-6">
+                                Dashboard
+                            </h1>
 
-                            {/* Content */}
-                            <main>
-                                <div
-                                    className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-100 border-4 border-[#8c52ff]">
-                                    <div className="grid grid-cols-12 gap-6">
-                                        <div className="grid grid-cols-12 col-span-12 gap-6">
-                                            <div className="col-span-12 mt-8">
-                                                <div className="flex items-center h-10">
-                                                    <h2 className="mr-5 text-lg font-medium truncate">
-                                                        Quản Trị
-                                                    </h2>
-                                                </div>
-
-                                                {/* Cards */}
-                                                <div className="grid grid-cols-12 gap-6 mt-5">
-                                                    {[
-                                                        {color: "blue-400", value: orderquantity, label: "Tổng số đơn hàng"},
-                                                        {color: "yellow-400", value: totalquantity, label: "Sản phẩm đã bán"},
-                                                        {color: "pink-600", value: (newcustm -1), label: "Khách hàng mới"},
-                                                        {color: "green-400", value: revenue.toLocaleString() + " VNĐ", label: "Doanh thu tháng này"},
-                                                    ].map((item, index) => (
-                                                        <a
-                                                            key={index}
-                                                            href="#"
-                                                            className="transform hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 bg-white"
-                                                        >
-                                                            <div className="p-5">
-                                                                <div className="flex justify-between">
-                                                                    <svg
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        className={`h-7 w-7 text-${item.color}`}
-                                                                        fill="none"
-                                                                        viewBox="0 0 24 24"
-                                                                        stroke="currentColor"
-                                                                    >
-                                                                        <path
-                                                                            strokeLinecap="round"
-                                                                            strokeLinejoin="round"
-                                                                            strokeWidth="2"
-                                                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                                                                        />
-                                                                    </svg>
-                                                                    <div
-                                                                        className="bg-[#8c52ff] rounded-full h-6 px-2 flex justify-items-center text-white font-semibold text-sm">
-                                                                            <span
-                                                                                className="flex items-center">30%</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="ml-2 w-full flex-1">
-                                                                    <div>
-                                                                        <div
-                                                                            className="mt-3 text-3xl font-bold leading-8">
-                                                                            {item.value}
-                                                                        </div>
-                                                                        <div
-                                                                            className="mt-1 text-base text-gray-600">
-                                                                            {item.label}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Charts */}
-                                            <div className="col-span-12 mt-5">
-                                                <div className="grid gap-2 grid-cols-1 lg:grid-cols-2">
-                                                    <div className="bg-white shadow-lg p-4" id="chartline"></div>
-                                                    <div className="bg-white shadow-lg" id="chartpie"></div>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                                {[
+                                    { value: orderquantity, label: "Tổng số đơn hàng" },
+                                    { value: totalquantity, label: "Sản phẩm đã bán" },
+                                    { value: newcustm - 1, label: "Khách hàng mới" },
+                                    {
+                                        value: revenue.toLocaleString() + " VNĐ",
+                                        label: "Doanh thu tháng này",
+                                    },
+                                ].map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className="bg-white shadow-lg rounded-xl p-4 border border-gray-200 hover:shadow-xl transition"
+                                    >
+                                        <p className="text-2xl font-bold text-gray-800">
+                                            {item.value}
+                                        </p>
+                                        <p className="text-gray-500 text-sm">{item.label}</p>
                                     </div>
-                                </div>
-                            </main>
-                        </div>
-                    </div>
-                )}
-                {display === "products" && <AdminProduct/>}
-                {display === "users" && <AdminUsers/>}
-                {display === "comments" && <AdminComments/>}
-                {display === "order" && <AdminOrder/>}
+                                ))}
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div
+                                    className="bg-white shadow-lg rounded-lg p-4"
+                                    id="chartline"
+                                ></div>
+                                <div
+                                    className="bg-white shadow-lg rounded-lg p-4"
+                                    id="chartpie"
+                                ></div>
+                            </div>
+                        </main>
+                    )}
+
+                    {display === "products" && <AdminProduct />}
+                    {display === "users" && <AdminUsers />}
+                    {display === "comments" && <AdminComments />}
+                    {display === "order" && <AdminOrder />}
+                </div>
             </div>
         </div>
-
     );
 };
 
 export default AdminPage;
-
