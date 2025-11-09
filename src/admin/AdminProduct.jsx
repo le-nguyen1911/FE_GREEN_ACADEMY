@@ -61,125 +61,107 @@ const AdminProduct = () => {
                         {status === "loading" && <p className="text-gray-500">Đang tải dữ liệu...</p>}
                         {error && <p className="text-red-500">{error}</p>}
 
-                        <div className="overflow-x-auto mt-3">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50 text-xs font-semibold text-gray-600 uppercase">
+                        <div className="overflow-hidden border border-gray-200 rounded-lg shadow-sm">
+                            <table className="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead className="bg-gray-50 text-gray-700 uppercase text-xs">
                                 <tr>
-                                    <th className="px-6 py-3 text-left">Hình ảnh</th>
-                                    <th className="px-6 py-3 text-left">Tên sản phẩm</th>
-                                    <th className="px-6 py-3 text-center">Tồn kho</th>
-                                    <th className="px-6 py-3 text-center">Trạng thái</th>
-                                    <th className="px-6 py-3 text-center">Hành động</th>
+                                    <th className="px-6 py-3 text-center whitespace-nowrap">Hình ảnh</th>
+                                    <th className="px-6 py-3 text-center whitespace-nowrap">Tên sản phẩm</th>
+                                    <th className="px-6 py-3 text-center whitespace-nowrap">Tồn kho</th>
+                                    <th className="px-6 py-3 text-center whitespace-nowrap">Trạng thái</th>
+                                    <th className="px-6 py-3 text-center whitespace-nowrap">Hành động</th>
                                 </tr>
                                 </thead>
 
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                {allProducts.length === 0 && (
+                                {allProducts.length === 0 ? (
                                     <tr>
-                                        <td colSpan="5" className="text-center text-gray-500 py-4">
+                                        <td
+                                            colSpan="5"
+                                            className="text-center text-gray-500 py-4 italic"
+                                        >
                                             Chưa có sản phẩm nào.
                                         </td>
                                     </tr>
-                                )}
-
-                                {allProducts.map((product) => (
-                                    <tr key={product.id} className="text-sm hover:bg-gray-50">
-                                        <td className="px-6 py-3">
-                                            <img
-                                                src={
-                                                    Array.isArray(product.image)
-                                                        ? product.image[0]
-                                                        : product.image || "/default-product.png"
-                                                }
-                                                alt={product.name}
-                                                className="w-16 h-16 object-cover rounded-lg border"
-                                            />
-                                        </td>
-
-                                        <td className="px-6 py-3">
-                                            <p className="font-medium">{product.name}</p>
-                                            <p className="text-xs text-gray-400">Loại: {product.category}</p>
-                                        </td>
-
-                                        {/* Tồn kho */}
-                                        <td className="px-6 py-3 text-center font-semibold text-gray-700">
-                                            {product.stock}
-                                        </td>
-
-                                        {/* Trạng thái */}
-                                        <td className="px-6 py-3 text-center">
-                                            <div className="relative inline-block w-11 h-5">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={product.status === true}
-                                                    onChange={() =>
-                                                        dispatch(
-                                                            UpdateProduct({ ...product, status: !product.status })
-                                                        )
+                                ) : (
+                                    allProducts.map((product) => (
+                                        <tr
+                                            key={product.id}
+                                            className="hover:bg-gray-50 transition-all text-center"
+                                        >
+                                            {/* Hình ảnh */}
+                                            <td className="px-4 py-3 whitespace-nowrap">
+                                                <img
+                                                    src={
+                                                        Array.isArray(product.image)
+                                                            ? product.image[0]
+                                                            : product.image || "/default-product.png"
                                                     }
-                                                    id={`switch-${product.id}`}
-                                                    className="peer appearance-none w-11 h-5 bg-gray-300 rounded-full checked:bg-green-500 cursor-pointer transition"
+                                                    alt={product.name}
+                                                    className="w-12 h-12 object-cover mx-auto rounded-lg border"
                                                 />
-                                                <label
-                                                    htmlFor={`switch-${product.id}`}
-                                                    className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-gray-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 cursor-pointer"
-                                                ></label>
-                                            </div>
-                                        </td>
+                                            </td>
 
-                                        {/* Hành động */}
-                                        <td className="px-6 py-3">
-                                            <div className="flex justify-center gap-4">
-                                                {/* Nút sửa */}
-                                                <button
-                                                    onClick={() => {
-                                                        setEditProduct(product);
-                                                        setShowEdit(true);
-                                                    }}
-                                                    className="text-blue-500 hover:text-blue-600 flex items-center gap-1"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="w-5 h-5"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth="2"
-                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                        />
-                                                    </svg>
-                                                    Sửa
-                                                </button>
+                                            {/* Tên sản phẩm */}
+                                            <td className="px-4 py-3 font-medium text-gray-800 truncate max-w-[150px] sm:max-w-none whitespace-nowrap">
+                                                {product.name}
+                                                <div className="text-xs text-gray-500">
+                                                    Loại: {product.category}
+                                                </div>
+                                            </td>
 
-                                                {/* Nút xóa */}
-                                                <button
-                                                    onClick={() => handleDelete(product)}
-                                                    className="text-red-500 hover:text-red-600 flex items-center gap-1"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="w-5 h-5"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
+                                            {/* Tồn kho */}
+                                            <td className="px-4 py-3 whitespace-nowrap text-gray-700 font-semibold">
+                                                {product.stock}
+                                            </td>
+
+                                            {/* Trạng thái */}
+                                            <td className="px-4 py-3 whitespace-nowrap">
+                                                <div className="relative inline-block w-11 h-5">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={product.status === true}
+                                                        onChange={() =>
+                                                            dispatch(
+                                                                UpdateProduct({ ...product, status: !product.status })
+                                                            )
+                                                        }
+                                                        id={`switch-${product.id}`}
+                                                        className="peer appearance-none w-11 h-5 bg-gray-300 rounded-full checked:bg-green-500 cursor-pointer transition-colors duration-300"
+                                                    />
+                                                    <label
+                                                        htmlFor={`switch-${product.id}`}
+                                                        className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-gray-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 cursor-pointer"
+                                                    ></label>
+                                                </div>
+                                            </td>
+
+                                            {/* Hành động */}
+                                            <td className="px-4 py-3 whitespace-nowrap">
+                                                <div className="flex justify-center flex-wrap gap-2 sm:gap-4">
+                                                    {/* Nút sửa */}
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditProduct(product);
+                                                            setShowEdit(true);
+                                                        }}
+                                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
                                                     >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth="2"
-                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                                        />
-                                                    </svg>
-                                                    Xóa
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                                        ✏️ Sửa
+                                                    </button>
+
+                                                    {/* Nút xóa */}
+                                                    <button
+                                                        onClick={() => handleDelete(product)}
+                                                        className="text-red-500 hover:text-red-700 flex items-center gap-1 transition-colors"
+                                                    >
+                                                        🗑 Xóa
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                                 </tbody>
                             </table>
                         </div>
