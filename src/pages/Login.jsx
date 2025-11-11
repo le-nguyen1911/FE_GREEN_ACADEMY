@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "../css/Login.css";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import techzone from "../assets/TECHZONE.png";
 import axios from "axios";
-import {loginUser} from "../redux/authSlice.jsx";
+import { loginUser } from "../redux/authSlice.jsx";
+import { postuser } from "../redux/userSlice.jsx";
 
-const URL_USER = "https://68d7ccd92144ea3f6da673fb.mockapi.io/Users";
+const URL_USER = "https://68d7ccd92144ea3f6da673fb.mockapi.io/users";
 
 const Login = () => {
     const [isSignup, setIsSignup] = useState(false);
@@ -18,89 +19,91 @@ const Login = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {status, error, currentUser} = useSelector((state) => state.auth);
+    const { status, error, currentUser } = useSelector((state) => state.auth);
 
     useEffect(() => {
         if (currentUser) navigate("/");
         else localStorage.removeItem("currentUser");
     }, [currentUser, navigate]);
 
+    //Đăng nhập
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            // Gọi API lấy thông tin người dùng
-            const res = await axios.get(`${URL_USER}?nameAccount=${nameAccount}&password=${password}`);
-            const user = res.data[0];
-            console.log(user);
-            if (!user) {
-                alert("Sai tài khoản hoặc mật khẩu!");
-                return;
-            }
-
-            if (user.status === false) {
-                alert("Tài khoản của bạn đã bị khóa!");
-                return;
-            }
-
             const result = await dispatch(loginUser({ nameAccount, password }));
             if (result.meta.requestStatus === "fulfilled") {
                 alert("Đăng nhập thành công!");
                 navigate("/");
             } else {
-                alert(error || "Đăng nhập thất bại!");
+                alert(result.payload || "Đăng nhập thất bại!");
             }
         } catch (err) {
-            console.error(err);
+            console.error("Lỗi khi đăng nhập:", err);
             alert("Lỗi kết nối server!");
         }
     };
 
+    //Đăng ký
     const handleSignup = async (e) => {
         e.preventDefault();
+
         if (!displayName || !signupAccount || !signupPassword) {
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
         try {
-            const res = await axios.get(`${URL_USER}?nameAccount=${signupAccount}`);
-            if (res.data.length > 0) {
+            // Kiểm tra tài khoản đã tồn tại chưa
+            let accountExists = false;
+            try {
+                const res = await axios.get(`${URL_USER}?nameAccount=${signupAccount}`);
+                if (res.status === 200 && res.data.length > 0) {
+                    accountExists = true;
+                }
+            } catch (err) {
+                if (!err.response || err.response.status !== 404) {
+                    console.error("Lỗi kiểm tra tài khoản:", err);
+                    alert("Không thể kết nối tới MockAPI!");
+                    return;
+                }
+            }
+
+            if (accountExists) {
                 alert("Tài khoản đã tồn tại!");
                 return;
             }
 
+            // Dữ liệu người dùng mới
             const newUser = {
-                id: Date.now().toString(36),
                 nameAccount: signupAccount,
                 displayName,
                 password: signupPassword,
                 role: "user",
-                avatar: "/image/profile_icon.png",
+                status: true,
+                avatar: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
                 createdAt: new Date().toISOString(),
             };
 
-            await axios.post(URL_USER, newUser);
-            alert("Đăng ký thành công! Vui lòng đăng nhập lại.");
-            setIsSignup(false);
-            setDisplayName("");
-            setSignupAccount("");
-            setSignupPassword("");
-        } catch (err) {
-            alert("Lỗi đăng ký tài khoản!");
-            console.error(err);
-        }
-    };
+            // Gọi redux thunk postuser
+            const result = await dispatch(postuser(newUser));
 
-    const handleClose = () => {
-        navigate("/");
+            if (result.meta.requestStatus === "fulfilled") {
+                alert("Đăng ký thành công! Vui lòng đăng nhập lại.");
+                setIsSignup(false);
+                setDisplayName("");
+                setSignupAccount("");
+                setSignupPassword("");
+            } else {
+                alert(result.payload || "Đăng ký thất bại!");
+            }
+        } catch (err) {
+            console.error("Chi tiết lỗi đăng ký:", err);
+            alert("Không thể kết nối tới MockAPI!");
+        }
     };
 
     return (
         <div className="auth-container">
-            <button className="auth-close-btn" onClick={handleClose}>
-                ×
-            </button>
-
             <div className="auth-left">
                 <div className="auth-box">
                     {isSignup ? (
@@ -116,7 +119,6 @@ const Login = () => {
                                     onChange={(e) => setDisplayName(e.target.value)}
                                     placeholder="Nhập tên hiển thị"
                                     className="auth-input"
-                                    autoComplete="off"
                                     required
                                 />
 
@@ -127,7 +129,6 @@ const Login = () => {
                                     onChange={(e) => setSignupAccount(e.target.value)}
                                     placeholder="Nhập tên đăng nhập"
                                     className="auth-input"
-                                    autoComplete="off"
                                     required
                                 />
 
@@ -138,7 +139,6 @@ const Login = () => {
                                     onChange={(e) => setSignupPassword(e.target.value)}
                                     placeholder="Nhập mật khẩu"
                                     className="auth-input"
-                                    autoComplete="off"
                                     required
                                 />
 
@@ -167,7 +167,6 @@ const Login = () => {
                                     onChange={(e) => setNameAccount(e.target.value)}
                                     placeholder="Nhập tên đăng nhập"
                                     className="auth-input"
-                                    autoComplete="off"
                                     required
                                 />
 
@@ -178,15 +177,10 @@ const Login = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Nhập mật khẩu"
                                     className="auth-input"
-                                    autoComplete="off"
                                     required
                                 />
 
-                                <button
-                                    type="submit"
-                                    className="auth-btn"
-                                    disabled={status === "loading"}
-                                >
+                                <button type="submit" className="auth-btn">
                                     {status === "loading" ? "Đang đăng nhập..." : "Đăng nhập"}
                                 </button>
                             </form>
@@ -204,12 +198,15 @@ const Login = () => {
 
             <div className="auth-right">
                 <div className="auth-welcome">
-                    <h2>Chào mừng đến với <br/> cộng đồng TechZone</h2>
+                    <h2>
+                        Chào mừng đến với <br /> cộng đồng TechZone
+                    </h2>
                     <p>
-                        Cập nhật mỗi ngày, giao diện hiện đại, dễ sử dụng.<br/>
+                        Cập nhật mỗi ngày, giao diện hiện đại, dễ sử dụng.
+                        <br />
                         Đăng nhập ngay để trải nghiệm toàn bộ tính năng tuyệt vời!
                     </p>
-                    <img src={techzone} alt="illustration" className="auth-image"/>
+                    <img src={techzone} alt="illustration" className="auth-image" />
                     <h3>Biến ý tưởng thành hiện thực</h3>
                     <p className="auth-small">Trải nghiệm mượt mà trên mọi thiết bị</p>
                 </div>

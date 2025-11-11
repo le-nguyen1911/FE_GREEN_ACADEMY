@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { BiShowAlt } from "react-icons/bi";
-import { FaHeart } from "react-icons/fa";
+import React, {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {BiShowAlt} from "react-icons/bi";
+import {FaHeart} from "react-icons/fa";
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import starticon from "../assets/star_icon.png";
 import cart from "../assets/cart_icon.png";
-import { addcart, getcart } from "../redux/cartSlice";
+import {addcart, getcart} from "../redux/cartSlice";
 
-const Productitem = ({ product }) => {
+const Productitem = ({product}) => {
     const [liked, setLiked] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { currentUser } = useSelector((state) => state.auth);
+    const {currentUser} = useSelector((state) => state.auth);
 
     const handleLike = (e) => {
         e.preventDefault();
@@ -64,7 +64,6 @@ const Productitem = ({ product }) => {
 
     return (
         <>
-            {/* ✅ Thông báo thêm vào giỏ */}
             <div className="fixed bottom-5 right-5 z-50">
                 <Collapse in={showAlert}>
                     <Alert severity="success" variant="filled">
@@ -73,10 +72,9 @@ const Productitem = ({ product }) => {
                 </Collapse>
             </div>
 
-            {/* ✅ Thẻ sản phẩm */}
             <Link
                 to={`/product/${product.id}`}
-                className="group bg-white flex flex-col justify-between p-4 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 w-full max-w-[300px] sm:max-w-none mx-auto"
+                className="group bg-white border border-gray-200 flex flex-col justify-between p-4 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 w-full max-w-[300px] sm:max-w-none mx-auto"
             >
                 {/* Ảnh sản phẩm */}
                 <div className="relative w-full aspect-square overflow-hidden rounded-xl bg-gray-50">
@@ -87,7 +85,8 @@ const Productitem = ({ product }) => {
                     />
 
                     {/* Icon hiển thị và yêu thích */}
-                    <div className="absolute left-1/2 bottom-[-20px] flex gap-3 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition-all duration-300">
+                    <div
+                        className="absolute left-1/2 bottom-[-20px] flex gap-3 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition-all duration-300">
                         {/* Xem nhanh */}
                         <button
                             onClick={(e) => {
@@ -97,7 +96,7 @@ const Productitem = ({ product }) => {
                             }}
                             className="bg-white hover:bg-[#8c52ff] hover:text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md transition"
                         >
-                            <BiShowAlt className="h-5 w-5" />
+                            <BiShowAlt className="h-5 w-5"/>
                         </button>
 
                         {/* Yêu thích */}
@@ -109,7 +108,7 @@ const Productitem = ({ product }) => {
                                     : "bg-white text-gray-500 hover:bg-[#8c52ff] hover:text-white"
                             }`}
                         >
-                            <FaHeart className="h-5 w-5" />
+                            <FaHeart className="h-5 w-5"/>
                         </button>
                     </div>
                 </div>
@@ -121,10 +120,9 @@ const Productitem = ({ product }) => {
 
                 {/* Đánh giá & tồn kho */}
                 <div className="flex justify-between items-center mt-1">
-                    <div className="flex gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                            <img key={i} src={starticon} alt="star" className="h-4" />
-                        ))}
+                    <div className="flex gap-1 items-center justify-center">
+                        <span className={"text-xl"}>5.0</span>
+                        <img src={starticon} alt="star" className="h-5"/>
                     </div>
                     <span className="text-gray-600 text-xs">
                         Tồn kho: {product.stock ?? 0}
@@ -140,7 +138,7 @@ const Productitem = ({ product }) => {
                         onClick={(e) => add_to_cart(product, e)}
                         className="p-1 hover:scale-110 transition-transform"
                     >
-                        <img src={cart} alt="cart" className="h-6" />
+                        <img src={cart} alt="cart" className="h-6"/>
                     </button>
                 </div>
             </Link>
