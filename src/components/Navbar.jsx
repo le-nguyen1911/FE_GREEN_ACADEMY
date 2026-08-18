@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSearch, setKeyword } from "../redux/searchSlice";
 import { logoutUser } from "../redux/authSlice";
-import { getcart } from "../redux/cartSlice";
+import { getcart, clearCart } from "../redux/cartSlice";
 import { FaXmark } from "react-icons/fa6";
 
 import Logo from "../assets/TECHZONE.svg";
@@ -26,10 +26,12 @@ const Navbar = () => {
     const { currentUser } = useSelector((state) => state.auth);
     const DashboardLink = currentUser?.role === "admin" ? "/adminpage" : "/error";
 
-    useEffect(() => {
-        if (currentUser?.id) dispatch(getcart(currentUser.id));
-    }, [currentUser, dispatch]);
-
+useEffect(() => {
+  dispatch(clearCart());
+  if (currentUser?.id) {
+    dispatch(getcart(currentUser.id));
+  }
+}, [currentUser?.id, dispatch]);
     useEffect(() => setSearchText(keyword), [keyword]);
 
     useEffect(() => {
@@ -46,13 +48,14 @@ const Navbar = () => {
         }
     };
 
-    const handleLogout = async () => {
-        if (window.confirm("Bạn có chắc muốn đăng xuất không?")) {
-            await dispatch(logoutUser());
-            alert("Đã đăng xuất!");
-            navigate("/");
-        }
-    };
+ const handleLogout = async () => {
+   if (window.confirm("Bạn có chắc muốn đăng xuất không?")) {
+     dispatch(clearCart());
+     await dispatch(logoutUser());
+     alert("Đã đăng xuất!");
+     navigate("/");
+   }
+ };;
 
     const menuItems = useMemo(
         () => [

@@ -1,18 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import del from "../assets/trashcan.png";
-import { getcart, updatecart, removecart } from "../redux/cartSlice";
+import { updatecart, removecart } from "../redux/cartSlice";
 const Cart = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.auth);
   const { cartList, totalprice, status } = useSelector((state) => state.cart);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (currentUser?.id) {
-      dispatch(getcart(currentUser.id)); 
-    }
-  }, [dispatch, currentUser]);
 
   const formatPrice = (v) =>
     new Intl.NumberFormat("vi-VN").format(Number(v) || 0) + " ₫";
@@ -108,7 +103,7 @@ const Cart = () => {
                             updatecart({
                               ...item,
                               quantity: Math.max(1, item.quantity - 1),
-                            })
+                            }),
                           )
                         }
                         className="w-8 h-8 border rounded-md hover:bg-gray-100"
@@ -124,7 +119,7 @@ const Cart = () => {
                             updatecart({
                               ...item,
                               quantity: item.quantity + 1,
-                            })
+                            }),
                           )
                         }
                         className="w-8 h-8 border rounded-md hover:bg-gray-100"
@@ -159,15 +154,16 @@ const Cart = () => {
           <span className="text-[#8c52ff]">{formatPrice(totalprice)}</span>
         </h2>
 
-        <button className="bg-[#8c52ff] text-white px-8 py-3 rounded-md hover:bg-[#7b3de3] transition shadow-md"
-                onClick={() =>
-                    navigate("/payment", {
-                        state: {
-                            items: cartList,
-                            total: totalprice,
-                        },
-                    })
-                }
+        <button
+          className="bg-[#8c52ff] text-white px-8 py-3 rounded-md hover:bg-[#7b3de3] transition shadow-md"
+          onClick={() =>
+            navigate("/payment", {
+              state: {
+                items: cartList,
+                total: totalprice,
+              },
+            })
+          }
         >
           Thanh toán
         </button>
